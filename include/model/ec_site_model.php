@@ -366,6 +366,7 @@ function update_product_qty_via_db($product_id, $public_flg, $product_qty) {
     }
 }
 
+/*
 function update_product_qty_via_db($product_id, $public_flg, $product_qty) {
     try {
         // データベースへ接続
@@ -389,3 +390,4 @@ function update_product_qty_via_db($product_id, $public_flg, $product_qty) {
         user_error("カートの更新に失敗しました。");
     }
 }
+*/
