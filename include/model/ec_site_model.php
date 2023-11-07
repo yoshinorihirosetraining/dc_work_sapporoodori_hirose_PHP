@@ -333,7 +333,7 @@ function get_product_qty_via_db($user_id, $product_id) {
     }
     
     $row0 = $stmt->fetch();
-    if (!row0) {
+    if (!$row0) {
         return 0;
     }
     if ($stmt->fetch()) {
@@ -342,7 +342,11 @@ function get_product_qty_via_db($user_id, $product_id) {
     return $row0['product_qty'];
 }
 
-function update_product_qty_via_db($product_id, $public_flg, $product_qty) {
+function is_product_qty_less_than_stock_qty($user_id, $product_id) {
+    return (get_product_qty_via_db($user_id, $product_id) < get_stock_qty_via_db($product_id));
+}
+
+function update_product_qty_via_db($user_id, $product_id, $product_qty) {
     try {
         // データベースへ接続
         $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
@@ -366,8 +370,7 @@ function update_product_qty_via_db($product_id, $public_flg, $product_qty) {
     }
 }
 
-/*
-function update_product_qty_via_db($product_id, $public_flg, $product_qty) {
+function insert_product_qty_via_db($user_id, $product_id, $product_qty) {
     try {
         // データベースへ接続
         $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
@@ -377,7 +380,7 @@ function update_product_qty_via_db($product_id, $public_flg, $product_qty) {
     }
     // UPDATE文の実行
     $db->beginTransaction();
-    $sql = "INSERT INTO ec_site_cart SET product_qty=:product_qty WHERE user_id=:user_id AND product_id=:product_id";
+    $sql = "INSERT INTO ec_site_cart (user_id, product_id, product_qty) VALUES (:user_id, :product_id, :product_qty)";
     $stmt = $db->prepare($sql);
     $stmt->bindValue(':product_qty', $product_qty);
     $stmt->bindValue(':user_id', $user_id);
@@ -387,7 +390,6 @@ function update_product_qty_via_db($product_id, $public_flg, $product_qty) {
         $db->commit();
     } else {
         $db->rollBack();
-        user_error("カートの更新に失敗しました。");
+        user_error("カートデータベースへの挿入に失敗しました。");
     }
 }
-*/

@@ -16,9 +16,11 @@
         <div class="clear"></div>
     </header>
     <div class="container">
+        <?php if ($msg != ""): ?>
         <div class="cart-addition-success-message">
-            カートに正常に追加されたメッセージを表示します。
+            <?php echo $msg ?>
         </div>
+        <?php endif; ?>
         <div class="item-list">
             <?php foreach (get_public_product_list_via_db() as $p): ?>
 
@@ -29,7 +31,13 @@
                     <p class="item-price"><?php echo $p['price'] ?>円</p>
                     <div class="clear"></div>
                 </div>
-                <input type="submit" name="add-to-cart1" value="カートに入れる">
+                <?php if (is_product_qty_less_than_stock_qty($_SESSION['user_id'], $p['product_id'])): ?>
+                <form method="post">
+                    <input type="submit" name="login_add_to_cart_btn<?php echo $p['product_id'] ?>" value="カートに入れる">
+                </form>
+                <?php else: ?>
+                <p>売り切れ</p>
+                <?php endif; ?>
             </div>
 
             <?php endforeach; ?>
