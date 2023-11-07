@@ -393,3 +393,6 @@ function insert_product_qty_via_db($user_id, $product_id, $product_qty) {
         user_error("カートデータベースへの挿入に失敗しました。");
     }
 }
+
+// これでカート情報を引っ張ってくる関数を作る
+// SELECT * FROM `ec_site_cart` INNER JOIN ec_site_product ON ec_site_cart.product_id = ec_site_product.product_id WHERE user_id=1;

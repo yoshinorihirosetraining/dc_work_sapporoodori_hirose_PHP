@@ -46,6 +46,11 @@ header div p:not(.clear) {
     padding-left: 10px;
 }
 
+header div p a {
+    color: white;
+    text-decoration: none;
+}
+
 .success-message {
     color: green;
     background-color: #afa;

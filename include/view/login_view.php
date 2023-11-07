@@ -9,7 +9,7 @@
     <header>
         <h1>ライラックマート</h1>
         <div>
-            <p>カート</p>
+            <p><a href="cart.php">カート</a></p>
             <p><a href="logout.php">ログアウト</a></p>
             <div class="clear"></div>
         </div>

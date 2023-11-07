@@ -9,8 +9,8 @@
     <header>
         <h1>ライラックマート</h1>
         <div>
-            <p>お買い物を続ける</p>
-            <p>ログアウト</p>
+            <p><a href="login.php">お買い物を続ける</a></p>
+            <p><a href="logout.php">ログアウト</a></p>
             <div class="clear"></div>
         </div>
         <div class="clear"></div>
