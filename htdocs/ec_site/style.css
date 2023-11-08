@@ -175,7 +175,7 @@ img {
     font-size: 18px;
     padding: 7.5px 10px;
     margin: 10px auto 0 auto;
-    width: 1050px;
+    width: 1100px;
 }
 
 .cart-update-success-message {
@@ -184,7 +184,7 @@ img {
     font-size: 18px;
     padding: 7.5px 10px;
     margin: 10px auto 0 auto;
-    width: 1050px;
+    width: 1100px;
 }
 
 .cart-item {
@@ -192,7 +192,7 @@ img {
     display: flex;
     border: 1px solid #888;
     text-align: left;
-    width: 1050px;
+    width: 1100px;
     margin: 15px auto;
 }
 
@@ -206,6 +206,12 @@ img {
     line-height: 200px;
     vertical-align: middle;
     margin-left: 15px;
+}
+
+.cart-item-delete-form {
+    display: flex;
+    flex-direction: column;
+    height: 200px;
 }
 
 .cart-item-delete-btn {
@@ -224,6 +230,7 @@ img {
     width: 150px;
     line-height: 200px;
     vertical-align: middle;
+    display: inline-block;
 }
 
 .cart-item-qty input {
@@ -231,7 +238,6 @@ img {
 }
 
 .cart-item-change-btn {
-    display: block;
     padding: 10px 15px;
     margin: auto 15px auto 0;
 }

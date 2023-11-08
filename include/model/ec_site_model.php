@@ -394,5 +394,40 @@ function insert_product_qty_via_db($user_id, $product_id, $product_qty) {
     }
 }
 
-// これでカート情報を引っ張ってくる関数を作る
-// SELECT * FROM `ec_site_cart` INNER JOIN ec_site_product ON ec_site_cart.product_id = ec_site_product.product_id WHERE user_id=1;
+function get_cart_information_via_db($user_id) {
+    try {
+        // データベースへ接続
+        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        exit();
+    }
+    // SELECT文の実行
+    $sql = "SELECT * FROM ec_site_cart INNER JOIN ec_site_product ON ec_site_cart.product_id = ec_site_product.product_id WHERE user_id=:user_id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':user_id', $user_id);
+
+    if (!$stmt->execute()) {
+        user_error("データベースの取得に失敗しました");
+    }
+    return $stmt->fetchAll();
+}
+
+function get_cart_total_via_db($user_id) {
+    try {
+        // データベースへ接続
+        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        exit();
+    }
+    // SELECT文の実行
+    $sql = "SELECT SUM(product_qty * price) FROM ec_site_cart INNER JOIN ec_site_product ON ec_site_cart.product_id = ec_site_product.product_id WHERE user_id=:user_id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':user_id', $user_id);
+
+    if (!$stmt->execute()) {
+        user_error("データベースの取得に失敗しました");
+    }
+    return $stmt->fetch()['SUM(product_qty * price)'];
+}

@@ -16,11 +16,13 @@ CREATE TABLE ec_site_product (
 );
 
 CREATE TABLE ec_site_cart (
+    cart_id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL,
     product_id INT NOT NULL,
     product_qty INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES ec_site_user(user_id),
-    FOREIGN KEY (product_id) REFERENCES ec_site_product(product_id)
+    FOREIGN KEY (product_id) REFERENCES ec_site_product(product_id),
+    PRIMARY KEY (cart_id)
 );
 
 CREATE TABLE ec_site_unique_filename (
