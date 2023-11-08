@@ -16,12 +16,16 @@
         <div class="clear"></div>
     </header>
     <h2>ショッピングカート</h2>
+    <?php if ($errmsg != ""): ?>
     <div class="cart-update-error-message">
-        エラーメッセージを表示します。
+        <?php echo $errmsg ?>
     </div>
+    <?php endif; ?>
+    <?php if ($msg != ""): ?>
     <div class="cart-update-success-message">
-        カートに正常に追加されたメッセージを表示します。
+        <?php echo $msg ?>
     </div>
+    <?php endif; ?>
 
     <?php foreach ($cart_info as $i): ?>
     <div class="cart-item">

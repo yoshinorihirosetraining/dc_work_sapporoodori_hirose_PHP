@@ -431,3 +431,67 @@ function get_cart_total_via_db($user_id) {
     }
     return $stmt->fetch()['SUM(product_qty * price)'];
 }
+
+function delete_cart_via_db($cart_id) {
+    try {
+        // データベースへ接続
+        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        exit();
+    }
+    // DELETE文の実行
+    $db->beginTransaction();
+    $sql = "DELETE FROM ec_site_cart WHERE cart_id=:cart_id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':cart_id', $cart_id);
+    $stmt->execute();
+    if ($stmt->rowCount() == 1) {
+        $db->commit();
+    } else {
+        $db->rollBack();
+        user_error("カートの削除に失敗しました。");
+    }
+}
+
+function get_cart_information_from_cart_id_via_db($cart_id) {
+    try {
+        // データベースへ接続
+        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        exit();
+    }
+    // SELECT文の実行
+    $sql = "SELECT * FROM ec_site_cart INNER JOIN ec_site_product ON ec_site_cart.product_id = ec_site_product.product_id WHERE cart_id=:cart_id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':cart_id', $cart_id);
+
+    if (!$stmt->execute()) {
+        user_error("データベースの取得に失敗しました");
+    }
+    return $stmt->fetch();
+}
+
+function update_cart_via_db($cart_id, $product_qty) {
+    try {
+        // データベースへ接続
+        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        exit();
+    }
+    // UPDATE文の実行
+    $db->beginTransaction();
+    $sql = "UPDATE ec_site_cart SET product_qty=:product_qty WHERE cart_id=:cart_id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':product_qty', $product_qty);
+    $stmt->bindValue(':cart_id', $cart_id);
+    $stmt->execute();
+    if ($stmt->rowCount() == 1) {
+        $db->commit();
+    } else {
+        $db->rollBack();
+        user_error("カートの更新に失敗しました。");
+    }
+}
