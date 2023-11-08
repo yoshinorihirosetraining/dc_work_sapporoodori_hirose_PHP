@@ -13,6 +13,5 @@ if ($_SESSION['state'] == 'admin') {
 $user_id = $_SESSION['user_id'];
 $cart_info = get_cart_information_via_db($user_id);
 $cart_total = get_cart_total_via_db($user_id);
-var_dump($cart_total);
 
 include_once '../../include/view/cart_view.php';
