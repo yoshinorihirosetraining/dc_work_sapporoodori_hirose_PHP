@@ -33,6 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] != "POST"
         $_SESSION['state'] = 'login';
         $_SESSION['user_name'] = $_POST['user_name'];
         $_SESSION['user_id'] = get_user_id_via_db($_POST['user_name']);
+        $_SESSION['welcome'] = 'true';
         header('Location: login.php');
         exit();
     } else if ($_POST['user_name'] == 'ec_admin' && $_POST['password'] == 'ec_admin') {

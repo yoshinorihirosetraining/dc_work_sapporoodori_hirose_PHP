@@ -14,6 +14,11 @@ $msg = "";
 
 $user_id = $_SESSION['user_id'];
 
+// ウェルカムメッセージの表示
+if ($_SESSION['welcome'] == 'true') {
+    $msg = "こんにちは、" . $_SESSION['user_name'] . "さん！";
+}
+
 // 「カートに入れる」ボタンを押下した時の処理
 $match = match_keyword_from_array('/^login_add_to_cart_btn([0-9]+)$/', $_POST);
 if ($match) {
