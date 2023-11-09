@@ -429,7 +429,11 @@ function get_cart_total_via_db($user_id) {
     if (!$stmt->execute()) {
         user_error("データベースの取得に失敗しました");
     }
-    return $stmt->fetch()['SUM(product_qty * price)'];
+    $sum = $stmt->fetch()['SUM(product_qty * price)'];
+    if ($sum == "") {
+        $sum = 0;
+    }
+    return $sum;
 }
 
 function delete_cart_via_db($cart_id) {
@@ -544,4 +548,21 @@ function checkout_via_db($user_id, &$errmsg) {
 
     $db->commit();
     return true;
+}
+
+function delete_cart_all_via_db($user_id) {
+    try {
+        // データベースへ接続
+        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        exit();
+    }
+    // DELETE文の実行
+    $db->beginTransaction();
+    $sql = "DELETE FROM ec_site_cart WHERE user_id=:user_id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':user_id', $user_id);
+    $stmt->execute();
+    $db->commit();
 }

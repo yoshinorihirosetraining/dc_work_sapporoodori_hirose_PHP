@@ -9,8 +9,8 @@
     <header>
         <h1>ライラックマート</h1>
         <div>
-            <p>新規にお買い物をする</p>
-            <p>ログアウト</p>
+            <p><a href="login.php">新規にお買い物をする</a></p>
+            <p><a href="logout.php">ログアウト</a></p>
             <div class="clear"></div>
         </div>
         <div class="clear"></div>
@@ -20,25 +20,16 @@
         <div class="checkout-success-message">
             購入が完了しました、ありがとうございました！
         </div>
+
+        <?php foreach ($cart_info as $i): ?>
         <div class="checkout-item">
-            <img src="image/キャベツ.jpg" width="270px" height="180px">
-            <div class="checkout-item-name">キャベツ</div>
-            <p class="checkout-item-price">価格：¥ 100</p>
-            <p class="checkout-item-qty">数量：2</p>
+            <img src="<?php echo $i['product_image'] ?>" width="270px" height="180px">
+            <div class="checkout-item-name"><?php echo $i['product_name'] ?></div>
+            <p class="checkout-item-price">価格：¥ <?php echo $i['price'] ?></p>
+            <p class="checkout-item-qty">数量：<?php echo $i['product_qty'] ?></p>
         </div>
-        <div class="checkout-item">
-            <img src="image/きゅうり.jpg" width="270px" height="180px">
-            <div class="checkout-item-name">きゅうり</div>
-            <p class="checkout-item-price">価格：¥ 120</p>
-            <p class="checkout-item-qty">数量：1</p>
-        </div>
-        <div class="checkout-item">
-            <img src="image/トマト.jpg" width="270px" height="180px">
-            <div class="checkout-item-name">トマト</div>
-            <p class="checkout-item-price">価格：¥ 130</p>
-            <p class="checkout-item-qty">数量：1</p>
-        </div>
-        <p id="checkout-total">合計：450円</p>
+        <?php endforeach; ?>
+        <p id="checkout-total">合計：<?php echo $cart_total ?>円</p>
     </div>
 </body>
 </html>
