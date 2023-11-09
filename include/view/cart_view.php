@@ -45,9 +45,11 @@
     </div>
     <?php endforeach; ?>
 
-    <div id="cart-total-and-checkout-btn">
-        <p id="cart-total">合計：<?php echo $cart_total ?>円</p>
-        <input type="submit" id="cart-checkout-btn" name="checkout-btn" value="購入する">
-    </div>
+    <form method="post">
+        <div id="cart-total-and-checkout-btn">
+            <p id="cart-total">合計：<?php echo $cart_total ?>円</p>
+            <input type="submit" id="cart-checkout-btn" name="cart_checkout_btn" value="購入する">
+        </div>
+    </form>
 </body>
 </html>

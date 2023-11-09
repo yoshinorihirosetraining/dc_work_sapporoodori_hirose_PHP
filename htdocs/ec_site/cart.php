@@ -39,9 +39,19 @@ if ($match) {
             $msg = "カートの数量を変更しました。";
         }
     }
+
 }
 
 $user_id = $_SESSION['user_id'];
+
+// 「購入する」ボタンを押下した時の処理
+if (isset($_POST['cart_checkout_btn'])) {
+    if (checkout_via_db($user_id, $errmsg)) {
+        header('Location: checkout.php');
+    }
+}
+
+
 $cart_info = get_cart_information_via_db($user_id);
 $cart_total = get_cart_total_via_db($user_id);
 
