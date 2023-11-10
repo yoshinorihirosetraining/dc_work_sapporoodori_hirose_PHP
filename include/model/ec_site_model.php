@@ -60,7 +60,7 @@ function get_user_id_via_db($user_name) {
     }
     
     $row0 = $stmt->fetch();
-    if (!row0) {
+    if (!$row0) {
         user_error("アカウントデータベースで０行の一致がありました。");
     }
     if ($stmt->fetch()) {
@@ -384,7 +384,7 @@ function get_stock_qty_via_db($product_id) {
     }
     
     $row0 = $stmt->fetch();
-    if (!row0) {
+    if (!$row0) {
         user_error("商品データベースで０行の一致がありました。");
     }
     if ($stmt->fetch()) {
