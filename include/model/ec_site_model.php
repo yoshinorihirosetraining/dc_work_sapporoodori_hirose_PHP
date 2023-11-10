@@ -2,6 +2,13 @@
 
 require_once('../../include/config/const.php');
 
+/**
+* 一般ユーザーであるかどうかを判別
+* 
+* @param string $user_name ユーザー名
+* @param string $password パスワード
+* @return bool trueならば一般ユーザー、falseならばそうでない
+*/
 function is_normal_user_via_db($user_name, $password) {
     try {
         // データベースへ接続
@@ -29,6 +36,12 @@ function is_normal_user_via_db($user_name, $password) {
     return true;
 }
 
+/**
+* ユーザー名からユーザーIDを取得
+* 
+* @param string $user_name ユーザー名
+* @return string ユーザーID
+*/
 function get_user_id_via_db($user_name) {
     try {
         // データベースへ接続
@@ -56,6 +69,12 @@ function get_user_id_via_db($user_name) {
     return $row0['user_id'];
 }
 
+/**
+* 与えられた文字列が一般ユーザー名であるかどうかを判別
+* 
+* @param string $user_name 判別したい文字列
+* @return bool trueならば一般ユーザー名、falseならばそうでない
+*/
 function is_normal_user_name_via_db($user_name) {
     try {
         // データベースへ接続
@@ -82,6 +101,12 @@ function is_normal_user_name_via_db($user_name) {
     return true;
 }
 
+/**
+* 一般ユーザーを追加
+* 
+* @param string $user_name ユーザー名
+* @param string $password パスワード
+*/
 function add_normal_user_via_db($user_name, $password) {
     try {
         // データベースへ接続
@@ -105,6 +130,11 @@ function add_normal_user_via_db($user_name, $password) {
     }
 }
 
+/**
+* データベースからユニークなファイル名を取得
+* 
+* @return string ユニークなファイル名
+*/
 function get_unique_filename_via_db() {
     try {
         // データベースへ接続
@@ -147,6 +177,15 @@ function get_unique_filename_via_db() {
     return $result;
 }
 
+/**
+* 商品を追加
+* 
+* @param string $product_name 商品名
+* @param string $price 単価
+* @param string $stock_qty 在庫数量
+* @param string $product_image 商品の画像ファイル名
+* @param string $public_flg 公開フラグ(1ならば公開、0ならば非公開)
+*/
 function add_product_via_db($product_name, $price, $stock_qty, $product_image, $public_flg) {
     try {
         // データベースへ接続
@@ -173,6 +212,11 @@ function add_product_via_db($product_name, $price, $stock_qty, $product_image, $
     }
 }
 
+/**
+* 商品一覧を取得
+* 
+* @return array 商品データベースの全行
+*/
 function get_product_list_via_db() {
     try {
         // データベースへ接続
@@ -191,6 +235,12 @@ function get_product_list_via_db() {
     return $stmt->fetchAll();
 }
 
+/**
+* 在庫数量を更新
+* 
+* @param string $product_id 商品ID
+* @param string $stock_qty 在庫数量
+*/
 function update_stock_qty_via_db($product_id, $stock_qty) {
     try {
         // データベースへ接続
@@ -214,6 +264,13 @@ function update_stock_qty_via_db($product_id, $stock_qty) {
     }
 }
 
+/**
+* 配列の各キーにpreg_matchを実施し、最初にマッチした検索結果を返す
+* 
+* @param string $pattern 検索するパターン
+* @param array $array 入力する配列
+* @return array 検索結果もしくはnull
+*/
 function match_keyword_from_array($pattern, $array) {
     foreach ($array as $key => $val) {
         $result = preg_match($pattern, $key, $match, PREG_OFFSET_CAPTURE);
@@ -224,6 +281,12 @@ function match_keyword_from_array($pattern, $array) {
     return null;
 }
 
+/**
+* 公開フラグを更新
+* 
+* @param string $product_id 商品ID
+* @param string $public_flg 公開フラグ
+*/
 function update_public_flg_via_db($product_id, $public_flg) {
     try {
         // データベースへ接続
@@ -247,6 +310,11 @@ function update_public_flg_via_db($product_id, $public_flg) {
     }
 }
 
+/**
+* 商品を削除
+* 
+* @param string $product_id 商品ID
+*/
 function delete_product_via_db($product_id) {
     try {
         // データベースへ接続
@@ -269,6 +337,11 @@ function delete_product_via_db($product_id) {
     }
 }
 
+/**
+* 公開フラグが1である商品データベースの行を取得
+* 
+* @return array 商品データベースの行
+*/
 function get_public_product_list_via_db() {
     try {
         // データベースへ接続
@@ -287,6 +360,12 @@ function get_public_product_list_via_db() {
     return $stmt->fetchAll();
 }
 
+/**
+* 在庫数量を取得
+* 
+* @param string $product_id 商品ID
+* @return string 在庫数量
+*/
 function get_stock_qty_via_db($product_id) {
     try {
         // データベースへ接続
@@ -314,6 +393,13 @@ function get_stock_qty_via_db($product_id) {
     return $row0['stock_qty'];
 }
 
+/**
+* カート数量を取得
+* 
+* @param string $user_id ユーザーID
+* @param string $product_id 商品ID
+* @return string カート数量
+*/
 function get_product_qty_via_db($user_id, $product_id) {
     try {
         // データベースへ接続
@@ -342,10 +428,24 @@ function get_product_qty_via_db($user_id, $product_id) {
     return $row0['product_qty'];
 }
 
+/**
+* カート数量が在庫数量よりも少ないかどうかを判別
+* 
+* @param string $user_id ユーザーID
+* @param string $product_id 商品ID
+* @return bool trueならばカート数量が在庫数量よりも少ない、falseならばそうでない
+*/
 function is_product_qty_less_than_stock_qty($user_id, $product_id) {
     return (get_product_qty_via_db($user_id, $product_id) < get_stock_qty_via_db($product_id));
 }
 
+/**
+* カート数量を更新
+* 
+* @param string $user_id ユーザー名
+* @param string $product_id 商品ID
+* @param string $product_qty カート数量
+*/
 function update_product_qty_via_db($user_id, $product_id, $product_qty) {
     try {
         // データベースへ接続
@@ -370,6 +470,13 @@ function update_product_qty_via_db($user_id, $product_id, $product_qty) {
     }
 }
 
+/**
+* カートの行を追加
+* 
+* @param string $user_id ユーザーID
+* @param string $product_id 商品ID
+* @param string $product_qty カート数量
+*/
 function insert_product_qty_via_db($user_id, $product_id, $product_qty) {
     try {
         // データベースへ接続
@@ -394,6 +501,12 @@ function insert_product_qty_via_db($user_id, $product_id, $product_qty) {
     }
 }
 
+/**
+* ユーザーIDを指定して、カートの行を取得
+* 
+* @param string $user_id ユーザーID
+* @return array カートの行
+*/
 function get_cart_information_via_db($user_id) {
     try {
         // データベースへ接続
@@ -413,6 +526,12 @@ function get_cart_information_via_db($user_id) {
     return $stmt->fetchAll();
 }
 
+/**
+* ユーザーIDを指定して、カートの合計金額を取得
+* 
+* @param string $user_id ユーザーID
+* @return string カートの合計金額
+*/
 function get_cart_total_via_db($user_id) {
     try {
         // データベースへ接続
@@ -436,6 +555,11 @@ function get_cart_total_via_db($user_id) {
     return $sum;
 }
 
+/**
+* カートの一行を削除
+* 
+* @param string $cart_id カートID
+*/
 function delete_cart_via_db($cart_id) {
     try {
         // データベースへ接続
@@ -458,6 +582,12 @@ function delete_cart_via_db($cart_id) {
     }
 }
 
+/**
+* カートIDから、カートの一行を取得
+* 
+* @param string $cart_id カートID
+* @return array カートの一行
+*/
 function get_cart_information_from_cart_id_via_db($cart_id) {
     try {
         // データベースへ接続
@@ -477,6 +607,12 @@ function get_cart_information_from_cart_id_via_db($cart_id) {
     return $stmt->fetch();
 }
 
+/**
+* カート数量を更新
+* 
+* @param string $cart_id カートID
+* @param string $product_qty カート数量
+*/
 function update_cart_via_db($cart_id, $product_qty) {
     try {
         // データベースへ接続
@@ -500,10 +636,13 @@ function update_cart_via_db($cart_id, $product_qty) {
     }
 }
 
-// SELECT FOR UPDATEを用いて在庫の行にロックをかける。
-// カート数量より在庫数量が多いことを確認してから、
-// 各在庫から数量を引いていく処理を行う。
-// 成功したらTRUE, 失敗したらFALSEを返す。
+/**
+* 決済処理を行う(カートの内容に従って在庫数量を更新)
+* 
+* @param string $user_id ユーザーID
+* @param string &$errmsg 決済に失敗した時にエラーメッセージを代入します
+* @return bool trueならば成功、falseならば失敗
+*/
 function checkout_via_db($user_id, &$errmsg) {
     try {
         // データベースへ接続
@@ -550,6 +689,11 @@ function checkout_via_db($user_id, &$errmsg) {
     return true;
 }
 
+/**
+* ユーザーIDを指定して、カートの行を削除
+* 
+* @param string $user_id ユーザーID
+*/
 function delete_cart_all_via_db($user_id) {
     try {
         // データベースへ接続
