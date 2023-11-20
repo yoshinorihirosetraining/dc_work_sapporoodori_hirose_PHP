@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../include/model/ec_site_model.php';
+require_once '../../include/model/index_model.php';
 
 session_start();
 

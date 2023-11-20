@@ -1,40 +1,7 @@
 <?php
 
 require_once('../../include/config/const.php');
-
-/**
-* 一般ユーザーであるかどうかを判別
-* 
-* @param string $user_name ユーザー名
-* @param string $password パスワード
-* @return bool trueならば一般ユーザー、falseならばそうでない
-*/
-function is_normal_user_via_db($user_name, $password) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
-    // SELECT文の実行
-    $sql = "SELECT user_name, password FROM ec_site_user WHERE user_name = :user_name AND password = :password";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':user_name', $user_name);
-    $stmt->bindValue(':password', $password);
-    
-    if (!$stmt->execute()) {
-        user_error("データベースの取得に失敗しました");
-    }
-    
-    if (!$stmt->fetch()) {
-        return false;
-    }
-    if ($stmt->fetch()) {
-        user_error("アカウントデータベースで複数行の一致がありました。");
-    }
-    return true;
-}
+require_once('../../include/utility/common_func.php');
 
 /**
 * ユーザー名からユーザーIDを取得
@@ -262,23 +229,6 @@ function update_stock_qty_via_db($product_id, $stock_qty) {
         $db->rollBack();
         user_error("商品の更新に失敗しました。");
     }
-}
-
-/**
-* 配列の各キーにpreg_matchを実施し、最初にマッチした検索結果を返す
-* 
-* @param string $pattern 検索するパターン
-* @param array $array 入力する配列
-* @return array 検索結果もしくはnull
-*/
-function match_keyword_from_array($pattern, $array) {
-    foreach ($array as $key => $val) {
-        $result = preg_match($pattern, $key, $match, PREG_OFFSET_CAPTURE);
-        if ($result) {
-            return $match;
-        }
-    }
-    return null;
 }
 
 /**
