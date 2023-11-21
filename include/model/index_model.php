@@ -11,13 +11,7 @@ require_once('../../include/utility/common_func.php');
 * @return bool trueならば一般ユーザー、falseならばそうでない
 */
 function is_normal_user_via_db($user_name, $password) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT user_name, password FROM ec_site_user WHERE user_name = :user_name AND password = :password";
     $stmt = $db->prepare($sql);
@@ -44,13 +38,7 @@ function is_normal_user_via_db($user_name, $password) {
 * @return string ユーザーID
 */
 function get_user_id_via_db($user_name) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT user_id FROM ec_site_user WHERE user_name = :user_name";
     $stmt = $db->prepare($sql);

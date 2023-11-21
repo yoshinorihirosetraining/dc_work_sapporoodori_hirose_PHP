@@ -9,42 +9,35 @@ require_once('../../include/utility/common_func.php');
 * @return string ユニークなファイル名
 */
 function get_unique_filename_via_db() {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
+    $db = get_database_connection();
 
-        // SELECT FOR UPDATE文の実行
-        $db->beginTransaction();
-        $sql = "SELECT id FROM ec_site_unique_filename FOR UPDATE;";
-        $stmt = $db->prepare($sql);
+    // SELECT FOR UPDATE文の実行
+    $db->beginTransaction();
+    $sql = "SELECT id FROM ec_site_unique_filename FOR UPDATE;";
+    $stmt = $db->prepare($sql);
 
-        if (!$stmt->execute()) {
-            user_error("データベースの取得に失敗しました");
-        }
-        $row0 = $stmt->fetch();
-        if (!$row0) {
-            user_error("データベースの取得に失敗しました");
-        }
-        $result = (int)($row0['id']);
-        if ($stmt->fetch()) {
-            user_error("ファイルネームデータベースで複数行の一致がありました。");
-        }
+    if (!$stmt->execute()) {
+        user_error("データベースの取得に失敗しました");
+    }
+    $row0 = $stmt->fetch();
+    if (!$row0) {
+        user_error("データベースの取得に失敗しました");
+    }
+    $result = (int)($row0['id']);
+    if ($stmt->fetch()) {
+        user_error("ファイルネームデータベースで複数行の一致がありました。");
+    }
 
-        // UPDATE文の実行
-        $sql = "UPDATE ec_site_unique_filename SET id=:id";
-        $stmt = $db->prepare($sql);
-        $stmt->bindValue(':id', $result + 1);
-        $stmt->execute();
-        if ($stmt->rowCount() == 1) {
-            $db->commit();
-        } else {
-            $db->rollBack();
-            user_error("ユーザーの追加に失敗しました。");
-        }
-
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
+    // UPDATE文の実行
+    $sql = "UPDATE ec_site_unique_filename SET id=:id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':id', $result + 1);
+    $stmt->execute();
+    if ($stmt->rowCount() == 1) {
+        $db->commit();
+    } else {
+        $db->rollBack();
+        user_error("ユーザーの追加に失敗しました。");
     }
 
     return $result;
@@ -60,13 +53,7 @@ function get_unique_filename_via_db() {
 * @param string $public_flg 公開フラグ(1ならば公開、0ならば非公開)
 */
 function add_product_via_db($product_name, $price, $stock_qty, $product_image, $public_flg) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // INSERT文の実行
     $db->beginTransaction();
     $sql = "INSERT INTO ec_site_product (product_name, price, stock_qty, product_image, public_flg) VALUES (:product_name, :price, :stock_qty, :product_image, :public_flg)";
@@ -92,13 +79,7 @@ function add_product_via_db($product_name, $price, $stock_qty, $product_image, $
 * @param string $stock_qty 在庫数量
 */
 function update_stock_qty_via_db($product_id, $stock_qty) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // UPDATE文の実行
     $db->beginTransaction();
     $sql = "UPDATE ec_site_product SET stock_qty=:stock_qty WHERE product_id=:product_id";
@@ -121,13 +102,7 @@ function update_stock_qty_via_db($product_id, $stock_qty) {
 * @param string $public_flg 公開フラグ
 */
 function update_public_flg_via_db($product_id, $public_flg) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // UPDATE文の実行
     $db->beginTransaction();
     $sql = "UPDATE ec_site_product SET public_flg=:public_flg WHERE product_id=:product_id";
@@ -148,13 +123,7 @@ function update_public_flg_via_db($product_id, $public_flg) {
 * @param string $product_id 商品ID
 */
 function delete_product_via_db($product_id) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // DELETE文の実行
     $db->beginTransaction();
     $sql = "DELETE FROM ec_site_product WHERE product_id=:product_id";
@@ -175,13 +144,7 @@ function delete_product_via_db($product_id) {
 * @return array 商品データベースの全行
 */
 function get_product_list_via_db() {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT * FROM ec_site_product";
     $stmt = $db->prepare($sql);

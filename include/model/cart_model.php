@@ -10,13 +10,7 @@ require_once('../../include/utility/common_func.php');
 * @return array カートの行
 */
 function get_cart_information_via_db($user_id) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT * FROM ec_site_cart INNER JOIN ec_site_product ON ec_site_cart.product_id = ec_site_product.product_id WHERE user_id=:user_id";
     $stmt = $db->prepare($sql);
@@ -34,13 +28,7 @@ function get_cart_information_via_db($user_id) {
 * @return string カートの合計金額
 */
 function get_cart_total_via_db($user_id) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT SUM(product_qty * price) FROM ec_site_cart INNER JOIN ec_site_product ON ec_site_cart.product_id = ec_site_product.product_id WHERE user_id=:user_id";
     $stmt = $db->prepare($sql);
@@ -62,13 +50,7 @@ function get_cart_total_via_db($user_id) {
 * @param string $cart_id カートID
 */
 function delete_cart_via_db($cart_id) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // DELETE文の実行
     $db->beginTransaction();
     $sql = "DELETE FROM ec_site_cart WHERE cart_id=:cart_id";
@@ -90,13 +72,7 @@ function delete_cart_via_db($cart_id) {
 * @return array カートの一行
 */
 function get_cart_information_from_cart_id_via_db($cart_id) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT * FROM ec_site_cart INNER JOIN ec_site_product ON ec_site_cart.product_id = ec_site_product.product_id WHERE cart_id=:cart_id";
     $stmt = $db->prepare($sql);
@@ -115,13 +91,7 @@ function get_cart_information_from_cart_id_via_db($cart_id) {
 * @param string $product_qty カート数量
 */
 function update_cart_via_db($cart_id, $product_qty) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // UPDATE文の実行
     $db->beginTransaction();
     $sql = "UPDATE ec_site_cart SET product_qty=:product_qty WHERE cart_id=:cart_id";
@@ -145,13 +115,7 @@ function update_cart_via_db($cart_id, $product_qty) {
 * @return bool trueならば成功、falseならば失敗
 */
 function checkout_via_db($user_id, &$errmsg) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     $db->beginTransaction();
 
     // SELECT FOR UPDATE文の実行

@@ -9,13 +9,7 @@ require_once('../../include/utility/common_func.php');
 * @return array 商品データベースの行
 */
 function get_public_product_list_via_db() {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT * FROM ec_site_product WHERE public_flg=1";
     $stmt = $db->prepare($sql);
@@ -33,13 +27,7 @@ function get_public_product_list_via_db() {
 * @return string 在庫数量
 */
 function get_stock_qty_via_db($product_id) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT stock_qty FROM ec_site_product WHERE product_id = :product_id";
     $stmt = $db->prepare($sql);
@@ -67,13 +55,7 @@ function get_stock_qty_via_db($product_id) {
 * @return string カート数量
 */
 function get_product_qty_via_db($user_id, $product_id) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT product_qty FROM ec_site_cart WHERE user_id = :user_id AND product_id = :product_id";
     $stmt = $db->prepare($sql);
@@ -113,13 +95,7 @@ function is_product_qty_less_than_stock_qty($user_id, $product_id) {
 * @param string $product_qty カート数量
 */
 function update_product_qty_via_db($user_id, $product_id, $product_qty) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // UPDATE文の実行
     $db->beginTransaction();
     $sql = "UPDATE ec_site_cart SET product_qty=:product_qty WHERE user_id=:user_id AND product_id=:product_id";
@@ -144,13 +120,7 @@ function update_product_qty_via_db($user_id, $product_id, $product_qty) {
 * @param string $product_qty カート数量
 */
 function insert_product_qty_via_db($user_id, $product_id, $product_qty) {
-    try {
-        // データベースへ接続
-        $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $db = get_database_connection();
     // UPDATE文の実行
     $db->beginTransaction();
     $sql = "INSERT INTO ec_site_cart (user_id, product_id, product_qty) VALUES (:user_id, :product_id, :product_qty)";
