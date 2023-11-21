@@ -28,7 +28,7 @@ function get_database_connection() {
     try {
         $db = new PDO(DB_DSN, DB_LOGIN_USER, DB_PASSWORD);
         // エラーモードを例外モードに設定
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $db;
     } catch (PDOException $e) {
         echo $e->getMessage();

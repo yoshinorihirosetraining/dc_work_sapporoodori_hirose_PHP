@@ -13,7 +13,7 @@ function get_cart_information_via_db($user_id) {
     $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT * FROM ec_site_cart INNER JOIN ec_site_product ON ec_site_cart.product_id = ec_site_product.product_id WHERE user_id=:user_id";
-    $stmt = execute_query($db, $sql, [':user_id', $user_id]);
+    $stmt = execute_query($db, $sql, [':user_id' => $user_id]);
     return $stmt->fetchAll();
 }
 /**
@@ -63,7 +63,7 @@ function get_cart_information_from_cart_id_via_db($cart_id) {
     $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT * FROM ec_site_cart INNER JOIN ec_site_product ON ec_site_cart.product_id = ec_site_product.product_id WHERE cart_id=:cart_id";
-    $stmt = execute_query($db, $sql, [':cart_id', $cart_id]);
+    $stmt = execute_query($db, $sql, [':cart_id' => $cart_id]);
     return $stmt->fetch();
 }
 
