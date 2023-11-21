@@ -14,11 +14,7 @@ function get_unique_filename_via_db() {
     // SELECT FOR UPDATE文の実行
     $db->beginTransaction();
     $sql = "SELECT id FROM ec_site_unique_filename FOR UPDATE;";
-    $stmt = $db->prepare($sql);
-
-    if (!$stmt->execute()) {
-        user_error("データベースの取得に失敗しました");
-    }
+    $stmt = execute_query($db, $sql);
     $row0 = $stmt->fetch();
     if (!$row0) {
         user_error("データベースの取得に失敗しました");
@@ -30,9 +26,7 @@ function get_unique_filename_via_db() {
 
     // UPDATE文の実行
     $sql = "UPDATE ec_site_unique_filename SET id=:id";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':id', $result + 1);
-    $stmt->execute();
+    $stmt = execute_query($db, $sql, [':id' => $result + 1]);
     if ($stmt->rowCount() == 1) {
         $db->commit();
     } else {
@@ -57,13 +51,7 @@ function add_product_via_db($product_name, $price, $stock_qty, $product_image, $
     // INSERT文の実行
     $db->beginTransaction();
     $sql = "INSERT INTO ec_site_product (product_name, price, stock_qty, product_image, public_flg) VALUES (:product_name, :price, :stock_qty, :product_image, :public_flg)";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':product_name', $product_name);
-    $stmt->bindValue(':price', $price);
-    $stmt->bindValue(':stock_qty', $stock_qty);
-    $stmt->bindValue(':product_image', $product_image);
-    $stmt->bindValue(':public_flg', $public_flg);
-    $stmt->execute();
+    $stmt = execute_query($db, $sql, [':product_name' => $product_name, ':price' => $price, ':stock_qty' => $stock_qty, ':product_image' => $product_image, ':public_flg' => $public_flg]);
     if ($stmt->rowCount() == 1) {
         $db->commit();
     } else {
@@ -83,10 +71,7 @@ function update_stock_qty_via_db($product_id, $stock_qty) {
     // UPDATE文の実行
     $db->beginTransaction();
     $sql = "UPDATE ec_site_product SET stock_qty=:stock_qty WHERE product_id=:product_id";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':product_id', $product_id);
-    $stmt->bindValue(':stock_qty', $stock_qty);
-    $stmt->execute();
+    $stmt = execute_query($db, $sql, [':product_id' => $product_id, ':stock_qty' => $stock_qty]);
     if ($stmt->rowCount() == 1) {
         $db->commit();
     } else {
@@ -106,10 +91,7 @@ function update_public_flg_via_db($product_id, $public_flg) {
     // UPDATE文の実行
     $db->beginTransaction();
     $sql = "UPDATE ec_site_product SET public_flg=:public_flg WHERE product_id=:product_id";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':product_id', $product_id);
-    $stmt->bindValue(':public_flg', $public_flg);
-    $stmt->execute();
+    $stmt = execute_query($db, $sql, [':product_id' => $product_id, ':public_flg' => $public_flg]);
     if ($stmt->rowCount() == 1) {
         $db->commit();
     } else {
@@ -127,9 +109,7 @@ function delete_product_via_db($product_id) {
     // DELETE文の実行
     $db->beginTransaction();
     $sql = "DELETE FROM ec_site_product WHERE product_id=:product_id";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':product_id', $product_id);
-    $stmt->execute();
+    $stmt = execute_query($db, $sql, [':product_id' => $product_id]);
     if ($stmt->rowCount() == 1) {
         $db->commit();
     } else {
@@ -147,10 +127,6 @@ function get_product_list_via_db() {
     $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT * FROM ec_site_product";
-    $stmt = $db->prepare($sql);
-    
-    if (!$stmt->execute()) {
-        user_error("データベースの取得に失敗しました");
-    }
+    $stmt = execute_query($db, $sql);
     return $stmt->fetchAll();
 }

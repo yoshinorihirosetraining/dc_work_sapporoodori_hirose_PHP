@@ -14,13 +14,7 @@ function is_normal_user_via_db($user_name, $password) {
     $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT user_name, password FROM ec_site_user WHERE user_name = :user_name AND password = :password";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':user_name', $user_name);
-    $stmt->bindValue(':password', $password);
-    
-    if (!$stmt->execute()) {
-        user_error("データベースの取得に失敗しました");
-    }
+    $stmt = execute_query($db, $sql, [':user_name' => $user_name, ':password' => $password]);
     
     if (!$stmt->fetch()) {
         return false;
@@ -41,12 +35,7 @@ function get_user_id_via_db($user_name) {
     $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT user_id FROM ec_site_user WHERE user_name = :user_name";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':user_name', $user_name);
-    
-    if (!$stmt->execute()) {
-        user_error("データベースの取得に失敗しました");
-    }
+    $stmt = execute_query($db, $sql, [':user_name' => $user_name]);
     
     $row0 = $stmt->fetch();
     if (!$row0) {

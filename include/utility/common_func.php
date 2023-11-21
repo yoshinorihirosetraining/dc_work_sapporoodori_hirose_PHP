@@ -35,3 +35,19 @@ function get_database_connection() {
         exit();
     }
 }
+
+/**
+* クエリを実行
+* 
+* @param PDO PDOオブジェクト
+* @param string SQL文
+* @param array プリペアド・ステートメントのバインドパラメータを値とする配列
+* @return PDOStatement PDOStatementオブジェクト
+*/
+function execute_query($db, $sql, $params = []) {
+    $stmt = $db->prepare($sql);
+    if (!$stmt->execute($params)) {
+        user_error("SQL文の実行に失敗しました。SQL: " . $sql);
+    }
+    return $stmt;
+}

@@ -12,11 +12,7 @@ function get_public_product_list_via_db() {
     $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT * FROM ec_site_product WHERE public_flg=1";
-    $stmt = $db->prepare($sql);
-    
-    if (!$stmt->execute()) {
-        user_error("データベースの取得に失敗しました");
-    }
+    $stmt = execute_query($db, $sql);
     return $stmt->fetchAll();
 }
 
@@ -30,12 +26,7 @@ function get_stock_qty_via_db($product_id) {
     $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT stock_qty FROM ec_site_product WHERE product_id = :product_id";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':product_id', $product_id);
-    
-    if (!$stmt->execute()) {
-        user_error("データベースの取得に失敗しました");
-    }
+    $stmt = execute_query($db, $sql, [':product_id' => $product_id]);
     
     $row0 = $stmt->fetch();
     if (!$row0) {
@@ -58,13 +49,7 @@ function get_product_qty_via_db($user_id, $product_id) {
     $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT product_qty FROM ec_site_cart WHERE user_id = :user_id AND product_id = :product_id";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':user_id', $user_id);
-    $stmt->bindValue(':product_id', $product_id);
-    
-    if (!$stmt->execute()) {
-        user_error("データベースの取得に失敗しました");
-    }
+    $stmt = execute_query($db, $sql, [':user_id' => $user_id, ':product_id' => $product_id]);
     
     $row0 = $stmt->fetch();
     if (!$row0) {
@@ -99,11 +84,7 @@ function update_product_qty_via_db($user_id, $product_id, $product_qty) {
     // UPDATE文の実行
     $db->beginTransaction();
     $sql = "UPDATE ec_site_cart SET product_qty=:product_qty WHERE user_id=:user_id AND product_id=:product_id";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':product_qty', $product_qty);
-    $stmt->bindValue(':user_id', $user_id);
-    $stmt->bindValue(':product_id', $product_id);
-    $stmt->execute();
+    $stmt = execute_query($db, $sql, [':product_qty' => $product_qty, ':user_id' => $user_id, ':product_id' => $product_id]);
     if ($stmt->rowCount() == 1) {
         $db->commit();
     } else {
@@ -124,11 +105,7 @@ function insert_product_qty_via_db($user_id, $product_id, $product_qty) {
     // UPDATE文の実行
     $db->beginTransaction();
     $sql = "INSERT INTO ec_site_cart (user_id, product_id, product_qty) VALUES (:user_id, :product_id, :product_qty)";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':product_qty', $product_qty);
-    $stmt->bindValue(':user_id', $user_id);
-    $stmt->bindValue(':product_id', $product_id);
-    $stmt->execute();
+    $stmt = execute_query($db, $sql, [':product_qty' => $product_qty, ':user_id' => $user_id, ':product_id' => $product_id]);
     if ($stmt->rowCount() == 1) {
         $db->commit();
     } else {

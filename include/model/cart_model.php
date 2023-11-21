@@ -13,12 +13,7 @@ function get_cart_information_via_db($user_id) {
     $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT * FROM ec_site_cart INNER JOIN ec_site_product ON ec_site_cart.product_id = ec_site_product.product_id WHERE user_id=:user_id";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':user_id', $user_id);
-
-    if (!$stmt->execute()) {
-        user_error("データベースの取得に失敗しました");
-    }
+    $stmt = execute_query($db, $sql, [':user_id', $user_id]);
     return $stmt->fetchAll();
 }
 /**
@@ -31,12 +26,7 @@ function get_cart_total_via_db($user_id) {
     $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT SUM(product_qty * price) FROM ec_site_cart INNER JOIN ec_site_product ON ec_site_cart.product_id = ec_site_product.product_id WHERE user_id=:user_id";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':user_id', $user_id);
-
-    if (!$stmt->execute()) {
-        user_error("データベースの取得に失敗しました");
-    }
+    $stmt = execute_query($db, $sql, [':user_id' => $user_id]);
     $sum = $stmt->fetch()['SUM(product_qty * price)'];
     if ($sum == "") {
         $sum = 0;
@@ -54,9 +44,7 @@ function delete_cart_via_db($cart_id) {
     // DELETE文の実行
     $db->beginTransaction();
     $sql = "DELETE FROM ec_site_cart WHERE cart_id=:cart_id";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':cart_id', $cart_id);
-    $stmt->execute();
+    $stmt = execute_query($db, $sql, [':cart_id' => $cart_id]);
     if ($stmt->rowCount() == 1) {
         $db->commit();
     } else {
@@ -75,12 +63,7 @@ function get_cart_information_from_cart_id_via_db($cart_id) {
     $db = get_database_connection();
     // SELECT文の実行
     $sql = "SELECT * FROM ec_site_cart INNER JOIN ec_site_product ON ec_site_cart.product_id = ec_site_product.product_id WHERE cart_id=:cart_id";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':cart_id', $cart_id);
-
-    if (!$stmt->execute()) {
-        user_error("データベースの取得に失敗しました");
-    }
+    $stmt = execute_query($db, $sql, [':cart_id', $cart_id]);
     return $stmt->fetch();
 }
 
@@ -95,10 +78,7 @@ function update_cart_via_db($cart_id, $product_qty) {
     // UPDATE文の実行
     $db->beginTransaction();
     $sql = "UPDATE ec_site_cart SET product_qty=:product_qty WHERE cart_id=:cart_id";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':product_qty', $product_qty);
-    $stmt->bindValue(':cart_id', $cart_id);
-    $stmt->execute();
+    $stmt = execute_query($db, $sql, ['product_qty' => $product_qty, ':cart_id' => $cart_id]);
     if ($stmt->rowCount() == 1) {
         $db->commit();
     } else {
@@ -120,11 +100,7 @@ function checkout_via_db($user_id, &$errmsg) {
 
     // SELECT FOR UPDATE文の実行
     $sql = "SELECT * FROM ec_site_cart INNER JOIN ec_site_product ON ec_site_cart.product_id = ec_site_product.product_id WHERE user_id=:user_id FOR UPDATE";
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':user_id', $user_id);
-    if (!$stmt->execute()) {
-        user_error("データベースの取得に失敗しました");
-    }
+    $stmt = execute_query($db, $sql, [':user_id' => $user_id]);
     $info = $stmt->fetchAll();
 
     // 在庫がカートより多いことを確認
@@ -139,10 +115,7 @@ function checkout_via_db($user_id, &$errmsg) {
     // UPDATE文の実行
     foreach ($info as $i) {
         $sql = "UPDATE ec_site_product SET stock_qty = :stock_qty WHERE product_id = :product_id";
-        $stmt = $db->prepare($sql);
-        $stmt->bindValue(':stock_qty', $i['stock_qty'] - $i['product_qty']);
-        $stmt->bindValue(':product_id', $i['product_id']);
-        $stmt->execute();
+        $stmt = execute_query($db, $sql, [':stock_qty' => $i['stock_qty'] - $i['product_qty'], ':product_id' => $i['product_id']]);
         if ($stmt->rowCount() != 1) {
             $db->rollBack();
             user_error("カートの更新に失敗しました。");
