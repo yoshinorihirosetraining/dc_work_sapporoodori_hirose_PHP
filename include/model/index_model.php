@@ -13,16 +13,17 @@ require_once('../../include/utility/common_func.php');
 function is_normal_user_via_db($user_name, $password) {
     $db = get_database_connection();
     // SELECT文の実行
-    $sql = "SELECT user_name, password FROM ec_site_user WHERE user_name = :user_name AND password = :password";
-    $stmt = execute_query($db, $sql, [':user_name' => $user_name, ':password' => $password]);
+    $sql = "SELECT password FROM ec_site_user WHERE user_name = :user_name";
+    $stmt = execute_query($db, $sql, [':user_name' => $user_name]);
     
-    if (!$stmt->fetch()) {
+    $row0 = $stmt->fetch();
+    if (!$row0) {
         return false;
     }
     if ($stmt->fetch()) {
         user_error("アカウントデータベースで複数行の一致がありました。");
     }
-    return true;
+    return password_verify($password, $row0['password']);
 }
 
 /**

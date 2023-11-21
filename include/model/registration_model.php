@@ -35,7 +35,7 @@ function add_normal_user_via_db($user_name, $password) {
     // INSERT文の実行
     $db->beginTransaction();
     $sql = "INSERT INTO ec_site_user (user_name, password) VALUES (:user_name, :password)";
-    $stmt = execute_query($db, $sql, [':user_name' => $user_name, ':password' => $password]);
+    $stmt = execute_query($db, $sql, [':user_name' => $user_name, ':password' => password_hash($password, PASSWORD_DEFAULT)]);
     if ($stmt->rowCount() == 1) {
         $db->commit();
     } else {
@@ -43,4 +43,3 @@ function add_normal_user_via_db($user_name, $password) {
         user_error("ユーザーの追加に失敗しました。");
     }
 }
-
