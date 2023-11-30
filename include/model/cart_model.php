@@ -126,3 +126,46 @@ function checkout_via_db($user_id, &$errmsg) {
     $db->commit();
     return true;
 }
+
+/**
+* カートから商品を削除する
+* 
+* @param string $cart_id カートID
+* @return bool メッセージ
+*/
+function delete_cart_item($cart_id) {
+    delete_cart_via_db($cart_id);
+    return "カートの項目を削除しました。";
+}
+
+/**
+* カート内の商品数量を変更する
+* 
+* @param string $cart_id カートID
+* @param string $new_quantity 変更する数量
+* @return string メッセージ
+*/
+function change_cart_item_quantity($cart_id, $new_quantity) {
+    $i = get_cart_information_from_cart_id_via_db($cart_id);
+    if ($new_quantity > $i['stock_qty']) {
+        return $i['product_name'].'の数量を'.$new_quantity.'個に変更できませんでした(在庫: '.$i['stock_qty'].'個)。';
+    } else {
+        update_cart_via_db($cart_id, $new_quantity);
+        return "カートの数量を変更しました。";
+    }
+}
+
+/**
+* 購入処理を行う
+* 
+* @param string $user_id ユーザーID
+* @return string エラーメッセージ
+*/
+function process_checkout($user_id) {
+    if (checkout_via_db($user_id, $errmsg)) {
+        header('Location: checkout.php');
+        exit();
+    } else {
+        return $errmsg;
+    }
+}

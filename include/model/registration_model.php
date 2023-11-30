@@ -43,3 +43,37 @@ function add_normal_user_via_db($user_name, $password) {
         user_error("ユーザーの追加に失敗しました。");
     }
 }
+
+/**
+* ユーザー入力の検証を行う
+* 
+* @param string $user_name ユーザー名
+* @param string $password パスワード
+*/
+function validate_user_input($user_name, $password) {
+    if ($user_name == '') {
+        return "ユーザー名を入力してください。";
+    } else if ($password == '') {
+        return "パスワードを入力してください。";
+    } else if (!preg_match('/^[0-9a-zA-Z]{5,32}$/', $user_name)) {
+        return "ユーザー名は5文字以上32文字以下の半角英数字で入力してください。";
+    } else if (!preg_match('/^[0-9a-zA-Z]{8,32}$/', $password)) {
+        return "パスワードは8文字以上32文字以下の半角英数字で入力してください。";
+    }
+    return "";
+}
+
+/**
+* ユーザー登録処理を行う
+* 
+* @param string $user_name ユーザー名
+* @param string $password パスワード
+*/
+function register_user($user_name, $password) {
+    if (is_normal_user_name_via_db($user_name)) {
+        return "このユーザー名はすでに使われております。";
+    } else {
+        add_normal_user_via_db($user_name, $password);
+        return "ユーザーを登録しました。";
+    }
+}

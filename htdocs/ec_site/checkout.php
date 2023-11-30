@@ -4,11 +4,7 @@ require_once '../../include/model/checkout_model.php';
 
 session_start();
 
-if ($_SESSION['state'] == 'admin') {
-    header('Location: admin.php');
-} else if ($_SESSION['state'] != 'login') {
-    header('Location: index.php');
-}
+check_session_and_redirect_index();
 
 $user_id = $_SESSION['user_id'];
 $cart_info = get_cart_information_via_db($user_id);

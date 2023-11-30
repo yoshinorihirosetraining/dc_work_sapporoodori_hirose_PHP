@@ -51,3 +51,31 @@ function execute_query($db, $sql, $params = []) {
     }
     return $stmt;
 }
+
+/**
+* セッションチェックの関数
+* 
+*/
+function check_session_and_redirect_main() {
+    if ($_SESSION['state'] == 'login') {
+        header('Location: main.php');
+        exit();
+    } else if ($_SESSION['state'] == 'admin') {
+        header('Location: admin.php');
+        exit();
+    }
+}
+
+/**
+* セッションチェックの関数
+* 
+*/
+function check_session_and_redirect_index() {
+    if ($_SESSION['state'] == 'admin') {
+        header('Location: admin.php');
+        exit();
+    } else if ($_SESSION['state'] != 'login') {
+        header('Location: index.php');
+        exit();
+    }
+}

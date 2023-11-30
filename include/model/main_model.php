@@ -113,3 +113,32 @@ function insert_product_qty_via_db($user_id, $product_id, $product_qty) {
         user_error("カートデータベースへの挿入に失敗しました。");
     }
 }
+
+/**
+* ウェルカムメッセージを表示
+*
+* @return string ウェルカムメッセージ
+*/
+function display_welcome_message() {
+    if ($_SESSION['welcome'] == 'true') {
+        return "こんにちは、" . $_SESSION['user_name'] . "さん！";
+    }
+    return "";
+}
+
+/**
+* カートに商品を追加
+* 
+* @param string $user_id ユーザーID
+* @param string $product_id 商品ID
+* @return string メッセージ
+*/
+function add_product_to_cart($user_id, $product_id) {
+    $product_qty = get_product_qty_via_db($user_id, $product_id);
+    if ($product_qty == 0) {
+        insert_product_qty_via_db($user_id, $product_id, 1);
+    } else {
+        update_product_qty_via_db($user_id, $product_id, $product_qty + 1);
+    }
+    return "カートに商品を１個追加しました。";
+}
