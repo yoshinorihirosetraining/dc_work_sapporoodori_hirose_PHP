@@ -88,7 +88,7 @@ function authenticate_user($user_name, $password) {
         $_SESSION['user_name'] = $user_name;
         $_SESSION['user_id'] = get_user_id_via_db($user_name);
         $_SESSION['welcome'] = 'true';
-        header('Location: login.php');
+        header('Location: main.php');
         exit();
     } else if ($user_name == 'ec_admin' && $password == 'ec_admin') {
         $_SESSION['state'] = 'admin';
